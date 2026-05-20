@@ -5,6 +5,7 @@ import { camposPago } from '../../config/formConfig.js';
 import DynamicForm from '../../components/Form.jsx';
 import Button from '../../components/Button.jsx';
 import Modal from '../../components/Modal.jsx'; // 👈 Importamos tu componente
+import '../../styles/client.css';
 
 export default function DataPagoPage() {
   const { orderData, resetOrder } = useOutletContext();
@@ -60,49 +61,45 @@ export default function DataPagoPage() {
   };
 
   return (
-    <div className="page-content" style={{ padding: '40px 20px', maxWidth: '550px', margin: '0 auto' }}>
+    <div className="page-content client-narrow client-narrow--550">
       
       {/* USO DE TU COMPONENTE MODAL */}
       <Modal isOpen={isModalOpen} onClose={confirmarYSalir}>
-        <div style={{ textAlign: 'center', padding: '10px' }}>
-          <div style={{ fontSize: '4rem', marginBottom: '15px' }}>✅</div>
-          <h2 style={{ color: '#2c3e50', fontSize: '1.8rem', fontWeight: '800' }}>¡Todo listo!</h2>
-          <p style={{ color: '#7f8c8d', marginBottom: '25px', lineHeight: '1.5' }}>
+        <div className="checkout-modal">
+          <div className="checkout-modal__icon">✅</div>
+          <h2 className="checkout-modal__title">¡Todo listo!</h2>
+          <p className="checkout-modal__text">
             Tu pedido ha sido recibido con éxito. En breve comenzaremos a prepararlo.
           </p>
-          <Button onClick={confirmarYSalir} style={{ width: '100%' }}>
+          <Button onClick={confirmarYSalir}>
             Entendido
           </Button>
         </div>
       </Modal>
 
-      <header style={{ textAlign: 'center', marginBottom: '35px' }}>
-        <h1 style={{ fontSize: '2.4rem', fontWeight: '800', color: '#2c3e50' }}>Checkout</h1>
-        <div style={{ height: '4px', width: '50px', background: '#f1c40f', margin: '10px auto', borderRadius: '2px' }}></div>
+      <header className="client-header client-header--mb35">
+        <h1 className="client-header__title">Checkout</h1>
+        <div className="checkout__divider"></div>
       </header>
 
       {/* Recibo de Orden */}
-      <div style={{ 
-        background: 'white', padding: '30px', borderRadius: '20px', 
-        marginBottom: '30px', boxShadow: '0 20px 40px rgba(0,0,0,0.06)',
-        border: '1px solid #f0f0f0'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-          <span style={{ color: '#95a5a6' }}>Resumen para:</span>
-          <span style={{ fontWeight: '600' }}>{orderData.step2.nombre_cliente}</span>
+      <div className="checkout__receipt">
+        <div className="checkout__row">
+          <span className="checkout__labelMuted">Resumen para:</span>
+          <span className="checkout__valueStrong">{orderData.step2.nombre_cliente}</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <span style={{ color: '#95a5a6' }}>Ubicación:</span>
-          <span style={{ fontWeight: '600' }}>Mesa {orderData.step2.numero_mesa}</span>
+        <div className="checkout__row checkout__row--mb20">
+          <span className="checkout__labelMuted">Ubicación:</span>
+          <span className="checkout__valueStrong">Mesa {orderData.step2.numero_mesa}</span>
         </div>
-        <div style={{ paddingTop: '20px', borderTop: '2px dashed #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '1.1rem', fontWeight: '700' }}>Total</span>
-          <span style={{ fontSize: '2.2rem', fontWeight: '900', color: '#27ae60' }}>${totalMonto.toFixed(2)}</span>
+        <div className="checkout__totalRow">
+          <span className="checkout__totalLabel">Total</span>
+          <span className="checkout__totalValue">${totalMonto.toFixed(2)}</span>
         </div>
       </div>
 
       {/* Formulario */}
-      <div style={{ background: '#fcfcfc', padding: '30px', borderRadius: '20px', border: '1px solid #eee' }}>
+      <div className="client-card client-card--muted client-card__pad30">
         <DynamicForm 
           fields={camposPago} 
           onSubmit={finalizarPedido} 
@@ -111,7 +108,7 @@ export default function DataPagoPage() {
         />
         <button 
           onClick={() => navigate(-1)} 
-          style={{ marginTop: '20px', width: '100%', background: 'none', border: 'none', color: '#bdc3c7', cursor: 'pointer', textDecoration: 'underline' }}
+          className="client-linkBtn"
         >
           Volver atrás
         </button>

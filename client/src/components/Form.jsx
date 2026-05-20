@@ -83,7 +83,7 @@ export default function DynamicForm({ fields, onSubmit, title, subtitle, message
         })}
         
               
-      <div style={{ marginTop: '20px' }}>
+      <div className="form-actions">
         <Button type="submit" variant="primary">
           Guardar Cambios
         </Button>

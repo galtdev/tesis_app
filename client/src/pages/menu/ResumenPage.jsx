@@ -1,5 +1,6 @@
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
+import '../../styles/client.css';
 
 export default function ResumenPedido() {
   const { orderData, updateOrder } = useOutletContext();
@@ -19,7 +20,7 @@ export default function ResumenPedido() {
   const montoTotal = orderData.step1.reduce((acc, p) => acc + Number(p.precio), 0);
 
   const sumarPlato = (platoBase) => {
-    const { cantidadVista, ...soloPlato } = platoBase;
+    const { cantidadVista: _cantidadVista, ...soloPlato } = platoBase;
     updateOrder('step1', [...orderData.step1, soloPlato]);
   };
 
@@ -37,52 +38,50 @@ export default function ResumenPedido() {
   };
 
   return (
-    <div className="page-content" style={{ padding: '40px 20px', maxWidth: '900px', margin: '0 auto' }}>
-      <h2 style={{ fontSize: '2rem', marginBottom: '30px', color: '#333', borderBottom: '3px solid #f1c40f', display: 'inline-block' }}>
-        🛒 Resumen de tu Pedido
-      </h2>
+    <div className="page-content resumen-page">
+      <h2 className="resumen__title">🛒 Resumen de tu Pedido</h2>
       
       {orderData.step1.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '50px', background: '#f9f9f9', borderRadius: '15px' }}>
-          <p style={{ fontSize: '1.2rem', color: '#666' }}>Tu carrito está vacío.</p>
+        <div className="resumen__empty">
+          <p className="resumen__emptyText">Tu carrito está vacío.</p>
           <Button onClick={() => navigate('/pedido')}>Ver el Menú</Button>
         </div>
       ) : (
-        <div className="resumen-container" style={{ background: 'white', borderRadius: '15px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', padding: '20px' }}>
-          <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 15px' }}>
+        <div className="resumen-container resumen__container">
+          <table className="resumen__table">
             <thead>
-              <tr style={{ color: '#888', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '1px' }}>
-                <th style={{ padding: '10px' }}>Cantidad</th>
-                <th style={{ textAlign: 'left', padding: '10px' }}>Platillo</th>
-                <th style={{ textAlign: 'right', padding: '10px' }}>Unitario</th>
-                <th style={{ textAlign: 'center', padding: '10px' }}>Eliminar</th>
+              <tr className="resumen__theadRow">
+                <th className="resumen__th">Cantidad</th>
+                <th className="resumen__th resumen__th--left">Platillo</th>
+                <th className="resumen__th resumen__th--right">Unitario</th>
+                <th className="resumen__th resumen__th--center">Eliminar</th>
               </tr>
             </thead>
             <tbody>
               {platosAgrupados.map((p) => (
-                <tr key={p.id} style={{ background: '#fcfcfc', borderRadius: '10px', transition: 'transform 0.2s' }}>
+                <tr key={p.id} className="resumen__row">
                   {/* Selector de Cantidad */}
-                  <td style={{ padding: '15px', borderRadius: '10px 0 0 10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#eee', borderRadius: '25px', padding: '5px 10px', width: 'fit-content', margin: '0 auto' }}>
+                  <td className="resumen__td resumen__td--leftRound">
+                    <div className="resumen__qtyPill">
                       <button 
                         onClick={() => restarPlato(p.id)}
-                        style={{ border: 'none', background: 'none', cursor: 'pointer', fontWeight: 'bold', padding: '0 10px', fontSize: '1.2rem' }}
+                        className="resumen__qtyBtn"
                       >−</button>
-                      <span style={{ fontWeight: '800', fontSize: '1.1rem', minWidth: '30px', textAlign: 'center' }}>{p.cantidadVista}</span>
+                      <span className="resumen__qtyValue">{p.cantidadVista}</span>
                       <button 
                         onClick={() => sumarPlato(p)}
-                        style={{ border: 'none', background: 'none', cursor: 'pointer', fontWeight: 'bold', padding: '0 10px', fontSize: '1.2rem', color: '#27ae60' }}
+                        className="resumen__qtyBtn resumen__qtyBtn--plus"
                       >+</button>
                     </div>
                   </td>
 
-                  <td style={{ padding: '15px', fontWeight: '600', color: '#2c3e50' }}>{p.nombre_platillo}</td>
-                  <td style={{ padding: '15px', textAlign: 'right', color: '#7f8c8d' }}>${Number(p.precio).toFixed(2)}</td>
+                  <td className="resumen__td resumen__itemName">{p.nombre_platillo}</td>
+                  <td className="resumen__td resumen__itemPrice">${Number(p.precio).toFixed(2)}</td>
                   
-                  <td style={{ padding: '15px', textAlign: 'center', borderRadius: '0 10px 10px 0' }}>
+                  <td className="resumen__td resumen__td--rightRound">
                     <button 
                       onClick={() => eliminarTodo(p.id)} 
-                      style={{ background: '#fff0f0', border: 'none', color: '#e74c3c', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold' }}
+                      className="resumen__deleteBtn"
                     >
                       🗑️ Borrar
                     </button>
@@ -92,20 +91,20 @@ export default function ResumenPedido() {
             </tbody>
           </table>
 
-          <hr style={{ border: 'none', borderTop: '1px dashed #ddd', margin: '20px 0' }} />
+          <hr className="resumen__divider" />
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0' }}>
-            <span style={{ color: '#888' }}>Total a pagar:</span>
-            <span style={{ fontSize: '2.2rem', fontWeight: '900', color: '#2c3e50' }}>
+          <div className="resumen__totalRow">
+            <span className="resumen__totalLabel">Total a pagar:</span>
+            <span className="resumen__totalValue">
               ${montoTotal.toFixed(2)}
             </span>
           </div>
 
-          <div style={{ marginTop: '40px', display: 'flex', gap: '15px', justifyContent: 'flex-end' }}>
-            <Button variant="secondary" onClick={() => navigate('/menu')} style={{ background: '#f8f9fa', border: '1px solid #ddd' }}>
+          <div className="resumen__actions">
+            <Button variant="secondary" onClick={() => navigate('/menu')}>
               ← Seguir Comprando
             </Button>
-            <Button onClick={() => navigate('/menu/datos')} style={{ padding: '15px 40px', fontSize: '1.1rem' }}>
+            <Button onClick={() => navigate('/menu/datos')}>
               Confirmar Datos →
             </Button>
           </div>

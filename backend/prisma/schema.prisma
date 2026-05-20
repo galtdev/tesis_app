@@ -7,125 +7,210 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// USUARIOS Y SEGURIDAD
 
+// global 
+
+model Platform {
+  id Int @id @default(autoincrement())
+  nombre String @default("Global")
+  config Json?
+  mantenimiento Boolean @default(false)
+
+  restaurants Restaurant[]
+  
+  @@map("platform")
+}
+
+
+// 1. NÚCLEO MULTI-TENANT (RESTAURANTES)
+
+
+model Restaurant {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  status    String
+  horario   String?
+  ubicacion String
+  banner    String
+  slug      String   @unique // Para urls dinámicas: app.com/pizzeria-pepe
+
+  platformId Int     @default(1) @map("platform_id")
+  platform   Platform @relation(fields: [platformId], references: [id], onDelete: Cascade)
+
+  // Relaciones multi-tenant obligatorias
+  usuarios   Usuario[]
+  cajas      Caja[]
+  cocinas    Cocina[]
+  platillos  Platillo[]
+  pedidos    Pedido[]
+
+  @@map("restaurant")
+}
+
+
+// 2. REGISTRO, AUTENTICACIÓN Y ROLES GLOBAL
+
+
+enum Rol {
+  SUPER_ADMIN
+  DUENO_RESTAURANT
+  STAFF_CAJA
+  STAFF_COCINA
+  CLIENTE
+}
+
+model Auth {
+  id       Int    @id @default(autoincrement())
+  correo   String @unique
+  password String
+  rol      Rol    @default(CLIENTE)
+
+  // Un Auth puede ser una cuenta de Staff/Dueño del negocio O un Cliente Global
+  usuarioId Int?     @unique @map("usuario_id")
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  clienteId Int?     @unique @map("cliente_id")
+  cliente   Cliente? @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("auth")
+}
+
+// Perfil para trabajadores internos de un restaurante específico
 model Usuario {
-  id     Int    @id @default(autoincrement())
-  nombre String 
-  status String?
-  auth   Auth?
-  cajas Caja[]
+  id           Int        @id @default(autoincrement())
+  nombre       String
+  status       String?
+  
+  restaurantId Int        @map("restaurant_id")
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  auth    Auth?
+  cajas   Caja[]
   cocinas Cocina[]
 
   @@map("usuarios")
 }
 
-model Auth {
-  id       Int     @id
-  correo   String  @unique
-  password String
-  rol      String?
-  usuario  Usuario @relation(fields: [id], references: [id], onDelete: Cascade)
-
-  @@map("auth")
-}
-
-
-// MODELOS OPERATIVOS
-
-model Caja {
-  id Int @id @default(autoincrement())
-  usuarioId Int 
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
-  pedidos Pedido[]
-
-  @@map("caja")
-  
-}
-
-model Cocina {
-  id Int @id @default(autoincrement())
-  usuarioId Int 
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
-  detalles DetallePedido[]
-
-  @@map("cocina")
-}
-
-// MODELO DEL PROCESO DE VENTAS
-
+// Perfil de clientes globales (Tienen acceso a cualquier Restaurant)
 model Cliente {
-  id Int @id @default(autoincrement())
-  cedula String @unique
-  nombre String
+  id       Int    @id @default(autoincrement())
+  cedula   String @unique
+  nombre   String
   telefono String
 
+  auth    Auth?
   pedidos Pedido[]
 
   @@map("cliente")
 }
 
+
+// 3. MODELOS OPERATIVOS (POR RESTAURANTE)
+
+model Caja {
+  id           Int        @id @default(autoincrement())
+  usuarioId    Int        @map("usuario_id")
+  usuario      Usuario    @relation(fields: [usuarioId], references: [id])
+  
+  restaurantId Int        @map("restaurant_id")
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  
+  pedidos      Pedido[]
+
+  @@map("caja")
+}
+
+model Cocina {
+  id           Int             @id @default(autoincrement())
+  usuarioId    Int             @map("usuario_id")
+  usuario      Usuario         @relation(fields: [usuarioId], references: [id])
+  
+  restaurantId Int             @map("restaurant_id")
+  restaurant   Restaurant      @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  
+  detalles     DetallePedido[]
+
+  @@map("cocina")
+}
+
+
+// 4. MODELO DE VENTAS Y TRANSACCIONES
+
+
 model Pedido {
-  id Int @id @default(autoincrement())
-  mesa String 
-  tipo_pedido String
-  status String
-  status_pago String 
+  id          Int      @id @default(autoincrement())
+  mesa        String
+  tipo_pedido String   @map("tipo_pedido")
+  status      String
+  status_pago String   @map("status_pago")
+  createdAt   DateTime @default(now()) @map("created_at")
 
-  clienteId Int 
-  cliente Cliente @relation(fields: [clienteId], references: [id])
+  // Vinculación al comercio donde se hace la compra
+  restaurantId Int        @map("restaurant_id")
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
-  cajaId Int 
-  caja Caja @relation(fields: [cajaId], references: [id])
+  // Vinculación al cliente global que compra
+  clienteId Int     @map("cliente_id")
+  cliente   Cliente @relation(fields: [clienteId], references: [id])
 
-  pago Pago[]
+  // Vinculación a la caja encargada en ese restaurante
+  cajaId Int  @map("caja_id")
+  caja   Caja @relation(fields: [cajaId], references: [id])
+
+  pago     Pago[]
   detalles DetallePedido[]
 
   @@map("pedido")
-
 }
 
 model DetallePedido {
-  id Int @id @default(autoincrement())
-  nombre_platillo String
-  precio Int
-  status String
+  id              Int       @id @default(autoincrement())
+  nombre_platillo String    @map("nombre_platillo")
+  precio          Int
+  status          String
+  fechaComplecion DateTime? @map("fecha_complecion")
 
-  platilloId Int
-  platillo Platillo @relation(fields: [platilloId], references: [id])
+  platilloId Int      @map("platillo_id")
+  platillo   Platillo @relation(fields: [platilloId], references: [id])
 
-  cocinaId Int 
-  cocina Cocina @relation(fields: [cocinaId], references: [id])
+  cocinaId Int    @map("cocina_id")
+  cocina   Cocina @relation(fields: [cocinaId], references: [id])
 
-  pedidoId Int 
-  pedido Pedido @relation(fields: [pedidoId], references: [id])
+  pedidoId Int    @map("pedido_id")
+  pedido   Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
 
   @@map("detalle_pedido")
-
 }
 
 model Pago {
-  id Int @id @default(autoincrement())
-  monto Int 
-  metodo_pago String
-  referencia String 
+  id          Int    @id @default(autoincrement())
+  monto       Int
+  metodo_pago String @map("metodo_pago")
+  referencia  String
 
-  pedidoId Int
-  pedido Pedido @relation(fields: [pedidoId], references: [id])
+  pedidoId Int    @map("pedido_id")
+  pedido   Pedido @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
 
   @@map("pago")
 }
 
-// CATALOGO
+
+// 5. CATÁLOGO / MENÚ (POR RESTAURANTE)
 
 model Platillo {
   id              Int     @id @default(autoincrement())
-  nombre_platillo String
+  nombre_platillo String  @map("nombre_platillo")
   precio          Int
   contenido       String
-  status          String 
-  category String?
-  imagen String?
+  status          String
+  category        String?
+  imagen          String?
+
+  // Cada restaurante autogestiona su propio catálogo de platos
+  restaurantId Int        @map("restaurant_id")
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   detalles DetallePedido[]
 

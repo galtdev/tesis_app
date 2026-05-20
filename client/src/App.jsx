@@ -7,6 +7,7 @@ import AdminLayout from './layouts/AdminLayout';
 import PageUser from './pages/admin/UsuariosPage';
 import MenuPage from './pages/admin/MenuPage';
 import Dashboard from './pages/admin/DashboardPage';
+import EstadisticasPage from './pages/admin/EstadisticasPage';
 import CajaPage from './pages/admin/CajaPage';
 import CocinaPage from './pages/admin/CocinaPage';
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="usuarios" element={<PageUser/>} />
         <Route path="menu" element={<MenuPage/>} />
         <Route path='dashboard' element={<Dashboard/>}></Route>
+        <Route path="estadisticas" element={<EstadisticasPage />} />
         <Route path='caja' element={<CajaPage/>}></Route>
         <Route path='cocina' element={<CocinaPage/>}></Route>
       </Route>

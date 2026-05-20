@@ -135,7 +135,8 @@ export async function finalizarPreparacion(pedidoId) {
                 status: 'EN_PREPARACION' // Solo los que están en cocina
             },
             data: {
-                status: 'COMPLETADO' // Esto hace que desaparezcan de la consulta de cocina
+                status: 'COMPLETADO',
+                fechaComplecion: new Date()
             }
         });
 
@@ -196,4 +197,111 @@ export async function consultarMetricasDashboard() {
         console.error("❌ Error en pedidoService (Dashboard):", error.message);
         throw error;
     }
+}
+
+function localDateKey(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+}
+
+function inicioRangoVentas(dias) {
+    const n = Math.min(31, Math.max(1, Number(dias) || 14));
+    const fin = new Date();
+    fin.setHours(0, 0, 0, 0);
+    const desde = new Date(fin);
+    desde.setDate(desde.getDate() - (n - 1));
+    return { n, desde };
+}
+
+export async function consultarVentasPorDia(dias = 14) {
+    const { n, desde } = inicioRangoVentas(dias);
+
+    const rows = await prisma.detallePedido.findMany({
+        where: {
+            status: 'COMPLETADO',
+            fechaComplecion: { gte: desde },
+            pedido: { status_pago: 'PAGADO' }
+        },
+        select: { precio: true, fechaComplecion: true }
+    });
+
+    const byDay = {};
+    for (const r of rows) {
+        if (!r.fechaComplecion) continue;
+        const key = localDateKey(new Date(r.fechaComplecion));
+        byDay[key] = (byDay[key] || 0) + Number(r.precio);
+    }
+
+    const serie = [];
+    for (let i = 0; i < n; i++) {
+        const dt = new Date(desde);
+        dt.setDate(desde.getDate() + i);
+        const key = localDateKey(dt);
+        serie.push({ fecha: key, total: Math.round((byDay[key] || 0) * 100) / 100 });
+    }
+
+    return serie;
+}
+
+export async function consultarEstadisticasVentas(dias = 14) {
+    const { n, desde } = inicioRangoVentas(dias);
+    const porDia = await consultarVentasPorDia(dias);
+
+    const detalles = await prisma.detallePedido.findMany({
+        where: {
+            status: 'COMPLETADO',
+            fechaComplecion: { gte: desde },
+            pedido: { status_pago: 'PAGADO' }
+        },
+        select: { nombre_platillo: true, precio: true }
+    });
+
+    const totalIngresos = porDia.reduce((acc, r) => acc + r.total, 0);
+    const diasConVentas = porDia.filter((r) => r.total > 0).length;
+    const promedioDiario = Math.round((totalIngresos / n) * 100) / 100;
+    const promedioEnDiasConVenta = diasConVentas
+        ? Math.round((totalIngresos / diasConVentas) * 100) / 100
+        : 0;
+
+    let mejorDia = null;
+    for (const r of porDia) {
+        if (r.total <= 0) continue;
+        if (!mejorDia || r.total > mejorDia.total) {
+            mejorDia = { fecha: r.fecha, total: r.total };
+        }
+    }
+
+    const byName = {};
+    for (const d of detalles) {
+        const k = d.nombre_platillo;
+        if (!byName[k]) {
+            byName[k] = { nombre: k, unidades: 0, monto: 0 };
+        }
+        byName[k].unidades += 1;
+        byName[k].monto += Number(d.precio);
+    }
+    const topPlatillos = Object.values(byName)
+        .sort((a, b) => b.monto - a.monto)
+        .slice(0, 10)
+        .map((p) => ({
+            nombre: p.nombre,
+            unidades: p.unidades,
+            monto: Math.round(p.monto * 100) / 100
+        }));
+
+    return {
+        porDia,
+        resumen: {
+            totalIngresos: Math.round(totalIngresos * 100) / 100,
+            promedioDiario,
+            promedioEnDiasConVenta,
+            diasConVentas,
+            diasEnPeriodo: n,
+            mejorDia,
+            platillosVendidos: detalles.length,
+            topPlatillos
+        }
+    };
 }

@@ -1,0 +1,377 @@
+.page-content--client {
+  padding: 20px;
+}
+
+/* Menu cliente */
+.client-menu__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.client-menu__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+/* Resumen */
+.resumen-page {
+  padding: 40px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.resumen__title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #333;
+  border-bottom: 3px solid #f1c40f;
+  display: inline-block;
+}
+
+.resumen__empty {
+  text-align: center;
+  padding: 50px;
+  background: #f9f9f9;
+  border-radius: 15px;
+}
+
+.resumen__emptyText {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.resumen__container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.resumen__table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 15px;
+}
+
+.resumen__theadRow {
+  color: #888;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.resumen__th {
+  padding: 10px;
+}
+.resumen__th--left {
+  text-align: left;
+}
+.resumen__th--right {
+  text-align: right;
+}
+.resumen__th--center {
+  text-align: center;
+}
+
+.resumen__row {
+  background: #fcfcfc;
+  border-radius: 10px;
+  transition: transform 0.2s;
+}
+
+.resumen__td {
+  padding: 15px;
+}
+.resumen__td--leftRound {
+  border-radius: 10px 0 0 10px;
+}
+.resumen__td--rightRound {
+  text-align: center;
+  border-radius: 0 10px 10px 0;
+}
+
+.resumen__qtyPill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+  border-radius: 25px;
+  padding: 5px 10px;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.resumen__qtyBtn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0 10px;
+  font-size: 1.2rem;
+}
+.resumen__qtyBtn--plus {
+  color: #27ae60;
+}
+
+.resumen__qtyValue {
+  font-weight: 800;
+  font-size: 1.1rem;
+  min-width: 30px;
+  text-align: center;
+}
+
+.resumen__itemName {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.resumen__itemPrice {
+  text-align: right;
+  color: #7f8c8d;
+}
+
+.resumen__deleteBtn {
+  background: #fff0f0;
+  border: none;
+  color: #e74c3c;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.resumen__divider {
+  border: none;
+  border-top: 1px dashed #ddd;
+  margin: 20px 0;
+}
+
+.resumen__totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+.resumen__totalLabel {
+  color: #888;
+}
+.resumen__totalValue {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #2c3e50;
+}
+
+.resumen__actions {
+  margin-top: 40px;
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+}
+
+/* Datos pedido */
+.client-narrow {
+  padding: 40px 20px;
+  margin: 0 auto;
+}
+.client-narrow--600 {
+  max-width: 600px;
+}
+.client-narrow--550 {
+  max-width: 550px;
+}
+
+.client-header {
+  margin-bottom: 40px;
+  text-align: center;
+}
+.client-header--mb35 {
+  margin-bottom: 35px;
+}
+.client-header__title {
+  font-size: 2.4rem;
+  color: #2c3e50;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.client-header__subtitle {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.client-grid {
+  display: grid;
+  gap: 30px;
+}
+
+.client-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid #f0f0f0;
+}
+.client-card--shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+.client-card--muted {
+  background: #fcfcfc;
+  border: 1px solid #eee;
+}
+
+.client-card__pad25 {
+  padding: 25px;
+}
+.client-card__pad30 {
+  padding: 30px;
+}
+
+.client-selection__title {
+  margin-top: 0;
+  font-size: 1rem;
+  color: #95a5a6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.client-selection__list {
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-bottom: 20px;
+}
+.client-selection__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f9f9f9;
+}
+.client-selection__name {
+  color: #2c3e50;
+  font-weight: 500;
+}
+.client-selection__price {
+  color: #7f8c8d;
+}
+.client-selection__totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 2px dashed #eee;
+}
+.client-selection__totalLabel {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+.client-selection__totalValue {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #2c3e50;
+}
+
+.client-formHeader {
+  margin-bottom: 25px;
+}
+.client-formHeader__title {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.3rem;
+}
+.client-formHeader__subtitle {
+  margin: 5px 0 0;
+  color: #95a5a6;
+  font-size: 0.9rem;
+}
+
+.client-linkBtn {
+  margin-top: 20px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #95a5a6;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: underline;
+}
+
+.client-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: #bdc3c7;
+  font-size: 0.85rem;
+}
+
+/* Pago */
+.checkout__divider {
+  height: 4px;
+  width: 50px;
+  background: #f1c40f;
+  margin: 10px auto;
+  border-radius: 2px;
+}
+
+.checkout__receipt {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+}
+.checkout__row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.checkout__row--mb20 {
+  margin-bottom: 20px;
+}
+.checkout__labelMuted {
+  color: #95a5a6;
+}
+.checkout__valueStrong {
+  font-weight: 600;
+}
+.checkout__totalRow {
+  padding-top: 20px;
+  border-top: 2px dashed #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.checkout__totalLabel {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.checkout__totalValue {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #27ae60;
+}
+
+/* Modal confirmación */
+.checkout-modal {
+  text-align: center;
+  padding: 10px;
+}
+.checkout-modal__icon {
+  font-size: 4rem;
+  margin-bottom: 15px;
+}
+.checkout-modal__title {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 10px;
+}
+.checkout-modal__text {
+  color: #7f8c8d;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Notification from '../../components/Notification.jsx';
 import CocinaCard from '../../components/CocinaCard.jsx';
 import { api } from '../../services/api.js';
+import '../../styles/admin.css';
 
 export default function CocinaPage() {
   const [pedidosAgrupados, setPedidosAgrupados] = useState([]);
@@ -20,9 +21,11 @@ export default function CocinaPage() {
           items: []
         };
       }
+
       acc[pId].items.push(item);
       return acc;
     }, {});
+    console.log(grupos)
     return Object.values(grupos);
   };
 
@@ -58,20 +61,16 @@ export default function CocinaPage() {
   };
 
   return (
-    <div className="page-content" style={{ padding: '20px', minHeight: '100vh', backgroundColor: '#f4f7f6' }}>
-      <div style={{ marginBottom: '25px' }}>
-        <h1 style={{ margin: 0, color: '#2c3e50' }}>👨‍🍳 Panel de Cocina</h1>
-        <p style={{ color: '#7f8c8d' }}>Comandas activas listas para preparar</p>
+    <div className="page-content cocina-page">
+      <div className="cocina__header">
+        <h1 className="cocina__title">👨‍🍳 Panel de Cocina</h1>
+        <p className="cocina__subtitle">Comandas activas listas para preparar</p>
       </div>
 
       {loading ? (
         <p>Cargando comandas...</p>
       ) : (
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
-          gap: '20px' 
-        }}>
+        <div className="cocina__grid">
           {pedidosAgrupados.length > 0 ? (
             pedidosAgrupados.map(pedido => (
               <CocinaCard 
@@ -81,15 +80,8 @@ export default function CocinaPage() {
               />
             ))
           ) : (
-            <div style={{ 
-                textAlign: 'center', 
-                gridColumn: '1/-1', 
-                padding: '60px', 
-                background: 'white', 
-                borderRadius: '12px',
-                border: '2px dashed #ccc' 
-            }}>
-              <h2 style={{ color: '#bdc3c7' }}>No hay pedidos por preparar 😴</h2>
+            <div className="cocina__empty">
+              <h2 className="cocina__emptyTitle">No hay pedidos por preparar 😴</h2>
             </div>
           )}
         </div>

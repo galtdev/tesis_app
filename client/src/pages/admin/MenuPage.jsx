@@ -1,7 +1,7 @@
 import { menuColums} from '../../config/tableConfig.js';
 import {api} from '../../services/api.js';
 // Limpiamos la importación duplicada aquí:
-import { camposMenu, camposEditMenu, camposPedido } from '../../config/formConfig.js';
+import { camposMenu, camposEditMenu } from '../../config/formConfig.js';
 import { useState, useEffect } from 'react';
 
 import Modal from '../../components/Modal.jsx';
@@ -11,6 +11,7 @@ import Notification from '../../components/Notification.jsx';
 import ProductCard from '../../components/MenuCard.jsx';
 import Button from '../../components/Button.jsx'; 
 import '../../styles/styles.css';
+import '../../styles/admin.css';
 
 export default function MenuPage() {
 
@@ -64,11 +65,14 @@ export default function MenuPage() {
   }
 
   useEffect(() => {
-    consultPlatos();
+    const t = setTimeout(() => {
+      consultPlatos();
+    }, 0);
+    return () => clearTimeout(t);
   }, []);
 
   return (
-    <div className="page-content" style={{ padding: '20px' }}>
+    <div className="page-content page-content--admin">
       <h1>Gestión de Menú</h1>
       <Button variant='primary' onClick={() => setOpenModal(true)}>
         + Agregar Platillo
@@ -96,7 +100,7 @@ export default function MenuPage() {
         }}/>
       </div>
 
-      <div style={{ marginTop: '20px' }}>
+      <div className="admin-menu__notifWrap">
         <Notification 
           text={notification.text}   
           type={notification.type}   
@@ -105,14 +109,9 @@ export default function MenuPage() {
         />
       </div>
 
-      <h2 style={{ marginTop: '40px' }}>Vista de Productos</h2>
+      <h2 className="admin-menu__productosTitle">Vista de Productos</h2>
       
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
-        gap: '25px',
-        padding: '20px 0'
-      }}>
+      <div className="admin-menu__productosGrid">
         {platos.map((data) => (
           <ProductCard
             key={data.id} 

@@ -81,3 +81,13 @@ export async function obtenerMetricasDashboard(req, res, next) {
         resp.error(req, res, err.message, 500); 
     }
 }
+
+export async function obtenerEstadisticasVentas(req, res, next) {
+    try {
+        const data = await pedidoService.consultarEstadisticasVentas(req.query.dias);
+        resp.success(req, res, data, 200);
+    } catch (err) {
+        console.log("MENSAJE DE PRISMA:", err.message);
+        resp.error(req, res, err.message, 500);
+    }
+}
