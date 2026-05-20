@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Card from '../../components/Card.jsx';
 import { api } from '../../services/api.js';
 import '../../styles/styles.css';
+import '../../styles/admin.css';
 
 export default function MenuPage() {
   const [metrics, setMetrics] = useState({
@@ -27,33 +28,28 @@ export default function MenuPage() {
   }, []);
 
   return (
-    <div className="page-content" style={{ padding: '20px' }}>
+    <div className="page-content page-content--admin">
       <h1>Dashboard</h1>
 
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', 
-        gap: '20px', 
-        marginBottom: '40px' 
-      }}>
+      <div className="admin-dashboard__grid">
         {/* Cantidad en Caja: Pedidos esperando validación */}
         <Card title="En Caja" subtitle="Pendientes de Pago">
-          <h2 style={{ color: '#f39c12', margin: 0 }}>{metrics.enCaja}</h2>
+          <h2 className="kpi__value kpi__value--caja">{metrics.enCaja}</h2>
         </Card>
 
         {/* Cantidad en Cocina: Pedidos en preparación */}
         <Card title="En Cocina" subtitle="Platos en Cola">
-          <h2 style={{ color: '#3498db', margin: 0 }}>{metrics.enCocina}</h2>
+          <h2 className="kpi__value kpi__value--cocina">{metrics.enCocina}</h2>
         </Card>
 
         {/* Total Platillos: Cantidad de items en el menú */}
         <Card title="Menú" subtitle="Platillos Registrados">
-          <h2 style={{ color: '#9b59b6', margin: 0 }}>{metrics.totalPlatillos}</h2>
+          <h2 className="kpi__value kpi__value--menu">{metrics.totalPlatillos}</h2>
         </Card>
 
         {/* Dinero Recaudado: Suma de pagos confirmados */}
         <Card title="Ganancias" subtitle="Ventas del Día">
-          <h2 style={{ color: '#27ae60', margin: 0 }}>
+          <h2 className="kpi__value kpi__value--ventas">
             ${metrics.recaudado.toFixed(2)}
           </h2>
         </Card>

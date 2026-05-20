@@ -4,9 +4,10 @@ import Button from '../../components/Button.jsx';
 import Modal from '../../components/Modal.jsx';
 import Notification from '../../components/Notification.jsx';
 import {api} from '../../services/api.js'
-import {camposPedido, camposUsuario} from '../../config/formConfig.js'
+import {camposUsuario} from '../../config/formConfig.js'
 import { usuariosColumns } from '../../config/tableConfig.js';
 import { useState, useEffect} from 'react';
+import '../../styles/admin.css';
 
 export default function UsuariosPage() {
 
@@ -48,7 +49,10 @@ export default function UsuariosPage() {
 
 
   useEffect(() => {
-    consultarHttp();
+    const t = setTimeout(() => {
+      consultarHttp();
+    }, 0);
+    return () => clearTimeout(t);
   }, []);
 
 
@@ -73,7 +77,7 @@ export default function UsuariosPage() {
         />
       </Modal>
 
-      <div style={{ marginTop: '40px' }}>
+      <div className="usuarios__section">
         <h2>Lista de Usuarios</h2>
         {cargando ? (
           <p>cargando datos...</p>
@@ -82,7 +86,7 @@ export default function UsuariosPage() {
         )}
       </div>
      {notification.text && (
-        <div style={{ marginTop: '20px' }}>
+        <div className="usuarios__notifWrap">
           <Notification 
             text={notification.text}   
             type={notification.type}   

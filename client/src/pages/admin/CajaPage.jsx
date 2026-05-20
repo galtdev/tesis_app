@@ -5,7 +5,7 @@ import Modal from '../../components/Modal.jsx';
 import DynamicForm from '../../components/Form.jsx';
 import { api } from '../../services/api.js';
 import { cajaColumns } from '../../config/tableConfig.js';
-import { camposConfirmarPago } from '../../config/formConfig.js';
+import '../../styles/admin.css';
 
 /**
  * CajaPage: Gestiona el cobro de pedidos pendientes.
@@ -20,6 +20,12 @@ export default function CajaPage() {
 
   // ID de la caja actual (podría venir de un contexto de usuario/auth)
   const CAJA_ID = 1;
+
+  // Función auxiliar para mostrar notificaciones temporales
+  function showNotification(text, type) {
+    setNotification({ text, type });
+    setTimeout(() => setNotification({ text: '', type: '' }), 4000);
+  }
 
   // 1. Obtener pedidos pendientes de cobro
   const fetchPedidos = useCallback(async () => {
@@ -38,14 +44,11 @@ export default function CajaPage() {
   }, []);
 
   useEffect(() => {
-    fetchPedidos();
+    const t = setTimeout(() => {
+      fetchPedidos();
+    }, 0);
+    return () => clearTimeout(t);
   }, [fetchPedidos]);
-
-  // Función auxiliar para mostrar notificaciones temporales
-  const showNotification = (text, type) => {
-    setNotification({ text, type });
-    setTimeout(() => setNotification({ text: '', type: '' }), 4000);
-  };
 
   // 2. Preparar el pedido para el cobro
   const handleAbrirPago = (pedido) => {
@@ -62,7 +65,7 @@ export default function CajaPage() {
   // 3. Confirmar el pago en el servidor (Esto dispara el pedido a cocina)
   const confirmarPagoEnServidor = async (formData) => {
     // IMPORTANTE: Se usa PUT porque actualizamos el estado del pedido a 'PAGADO'
-    const { data, error } = await api.put(
+    const { error } = await api.put(
       `/api/pedido/confirmar/${pedidoSeleccionado.id}`, 
       {
         monto: formData.monto || pedidoSeleccionado.totalCalculado,
@@ -82,15 +85,15 @@ export default function CajaPage() {
   };
 
   return (
-    <div className="page-content" style={{ padding: '20px' }}>
-      <div className="header-caja" style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="page-content page-content--admin">
+      <div className="header-caja caja__header">
         <div>
-          <h1 style={{ margin: 0 }}>💰 Caja Registradora</h1>
-          <p style={{ color: '#666' }}>Gestión de cobros y facturación</p>
+          <h1 className="caja__title">💰 Caja Registradora</h1>
+          <p className="caja__subtitle">Gestión de cobros y facturación</p>
         </div>
-        <div style={{ textAlign: 'right', background: '#e8f4fd', padding: '10px 20px', borderRadius: '8px' }}>
-          <span style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>PENDIENTES:</span>
-          <h2 style={{ margin: 0, color: '#2980b9' }}>{pedidos.length}</h2>
+        <div className="caja__pendientesBox">
+          <span className="caja__pendientesLabel">PENDIENTES:</span>
+          <h2 className="caja__pendientesValue">{pedidos.length}</h2>
         </div>
       </div>
 
@@ -114,20 +117,14 @@ export default function CajaPage() {
   {pedidoSeleccionado && (
     <div className="modal-pago-container">
       {/* Resumen de la Orden */}
-      <div style={{ 
-        padding: '15px', 
-        background: '#f8f9fa', 
-        borderRadius: '8px', 
-        marginBottom: '15px',
-        border: '1px solid #dee2e6' 
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+      <div className="caja-modal__resumen">
+        <div className="caja-modal__resumenRow">
           <span><strong>Mesa:</strong> {pedidoSeleccionado.mesa}</span>
           <span><strong>Orden:</strong> #{pedidoSeleccionado.id}</span>
         </div>
-        <div style={{ borderTop: '1px solid #eee', paddingTop: '10px', textAlign: 'center' }}>
-          <span style={{ fontSize: '0.8rem', color: '#666' }}>MONTO A VALIDAR</span>
-          <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#27ae60' }}>
+        <div className="caja-modal__montoWrap">
+          <span className="caja-modal__montoLabel">MONTO A VALIDAR</span>
+          <div className="caja-modal__montoValue">
             ${pedidoSeleccionado.totalCalculado.toFixed(2)}
           </div>
         </div>
@@ -135,51 +132,29 @@ export default function CajaPage() {
 
       {/* Datos reportados por el cliente (Si existen) */}
       {pedidoSeleccionado.pago && pedidoSeleccionado.pago.length > 0 ? (
-        <div style={{ 
-          padding: '15px', 
-          background: '#fff3cd', 
-          borderRadius: '8px', 
-          marginBottom: '20px',
-          border: '1px solid #ffeeba'
-        }}>
-          <h4 style={{ margin: '0 0 10px 0', color: '#856404' }}>📋 Datos del Pago Reportado</h4>
-          <p style={{ margin: '5px 0' }}><strong>Método:</strong> {pedidoSeleccionado.pago[0].metodo_pago}</p>
-          <p style={{ margin: '5px 0' }}><strong>Referencia:</strong> {pedidoSeleccionado.pago[0].referencia || 'Sin referencia'}</p>
-          <p style={{ margin: '5px 0' }}><strong>Fecha/Hora:</strong> {new Date(pedidoSeleccionado.pago[0].fecha).toLocaleString()}</p>
+        <div className="caja-modal__pagoReportado">
+          <h4 className="caja-modal__pagoReportadoTitle">📋 Datos del Pago Reportado</h4>
+          <p className="caja-modal__pagoReportadoItem"><strong>Método:</strong> {pedidoSeleccionado.pago[0].metodo_pago}</p>
+          <p className="caja-modal__pagoReportadoItem"><strong>Referencia:</strong> {pedidoSeleccionado.pago[0].referencia || 'Sin referencia'}</p>
+          <p className="caja-modal__pagoReportadoItem"><strong>Fecha/Hora:</strong> 11-03-2025</p>
         </div>
       ) : (
-        <div style={{ padding: '15px', background: '#fcebea', borderRadius: '8px', marginBottom: '20px' }}>
-          <p style={{ margin: 0, color: '#e74c3c' }}>⚠️ Este pedido no tiene datos de pago adjuntos.</p>
+        <div className="caja-modal__sinPago">
+          <p className="caja-modal__sinPagoText">⚠️ Este pedido no tiene datos de pago adjuntos.</p>
         </div>
       )}
 
       {/* Botón de acción simple */}
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div className="caja-modal__actions">
         <button 
           onClick={() => confirmarPagoEnServidor({})} // Mandamos objeto vacío porque el backend ya tiene los datos
-          style={{ 
-            flex: 1, 
-            padding: '12px', 
-            background: '#27ae60', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '6px',
-            fontWeight: 'bold',
-            cursor: 'pointer'
-          }}
+          className="caja-modal__btnPrimary"
         >
           ✅ Validar y Enviar a Cocina
         </button>
         <button 
           onClick={() => setIsModalOpen(false)}
-          style={{ 
-            padding: '12px', 
-            background: '#95a5a6', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '6px',
-            cursor: 'pointer'
-          }}
+          className="caja-modal__btnSecondary"
         >
           Cancelar
         </button>

@@ -5,14 +5,13 @@ import ProductCard from '../../components/MenuCard.jsx';
 import Button from '../../components/Button.jsx';
 import Modal from '../../components/Modal.jsx';
 import '../../styles/styles.css';
+import '../../styles/client.css';
 
 
 
 export default function MenuClient() {
 
   const [platillos, setPlatillos] = useState([]);
-  const [platoPedido, setPlatoPedido] = useState([]);
-  const [buttonAgg, setButtonAgg] = useState(false);
   const {orderData, updateOrder} = useOutletContext();
 
   const navigate = useNavigate();
@@ -49,15 +48,24 @@ export default function MenuClient() {
 
 
   useEffect(()=>{
-    consult();
+    const t = setTimeout(() => {
+      consult();
+    }, 0);
+    return () => clearTimeout(t);
   }, []);
 
 
 
   return (
-    <div className="page-content" style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+
+    
+
+    <div className="page-content page-content--client">
+      <div className="client-menu__header">
         <h1>Menu Cliente</h1>
+         <Button onClick={() => navigate('/admin/dashboard')}>
+            Ir a admin dashboard
+          </Button>
         {/* Solo mostramos el botón si hay algo en el carrito */}
         {orderData.step1.length > 0 && (
           <Button onClick={() => navigate('/menu/resumen')}>
@@ -66,7 +74,7 @@ export default function MenuClient() {
         )}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '25px' }}>
+      <div className="client-menu__grid">
         {platillos.map((data) => {
           const estaAgregado = orderData.step1.some(p => p.id === data.id);
           return (
