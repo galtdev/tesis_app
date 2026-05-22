@@ -1,3 +1,4 @@
+/* AUTH: Enlaces según rol (ADMIN_NAV) + cerrar sesión → /admin/login */
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { ADMIN_NAV, normalizeRol } from '../config/roles.js';

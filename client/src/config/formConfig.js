@@ -1,3 +1,4 @@
+/* AUTH: camposLogin, camposRegistroSuperAdmin, dueño en camposRestaurant — CHANGELOG-AUTH.md */
 // Login (restaurante y super admin)
 export const camposLogin = [
   { name: 'correo', label: 'Correo electrónico', type: 'email', placeholder: 'correo@ejemplo.com', required: true },

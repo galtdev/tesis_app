@@ -1,4 +1,5 @@
-
+/* AUTH: Mapa de rutas — login público, /super-admin (SUPER_ADMIN), /admin por rol.
+   Ver CHANGELOG-AUTH.md */
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 import AdminLayout from './layouts/AdminLayout';

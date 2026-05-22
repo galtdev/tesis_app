@@ -1,3 +1,4 @@
+/* AUTH: Menú admin — GET/POST/DELETE protegidos por rol (DUENO, STAFF) */
 import express from 'express';
 import upload from '../middlewares/multer.js';
 import security from '../middlewares/securityActions.js';

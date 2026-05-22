@@ -1,3 +1,4 @@
+/* AUTH: Adjunta Authorization Bearer en todas las peticiones. Ver CHANGELOG-AUTH.md */
 let authToken = null;
 
 export function setAuthToken(token) {

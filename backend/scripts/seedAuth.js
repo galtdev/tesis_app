@@ -1,6 +1,7 @@
 /**
- * Crea usuarios de prueba con roles. Ejecutar desde /backend:
- * node scripts/seedAuth.js
+ * AUTH: Usuarios de prueba (super admin, dueño, caja, cocina).
+ * Ejecutar desde /backend: node scripts/seedAuth.js
+ * Ver CHANGELOG-AUTH.md
  */
 import bcrypt from 'bcrypt';
 import prisma from '../src/config/prisma.js';

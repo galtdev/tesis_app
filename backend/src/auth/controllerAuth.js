@@ -1,4 +1,4 @@
-
+/* AUTH: login, me, registro super admin, payload de sesión (token + user). CHANGELOG-AUTH.md */
 import * as dbauth from '../services/authService.js';
 import * as resp from '../red/response.js';
 import bcrypt from 'bcrypt';

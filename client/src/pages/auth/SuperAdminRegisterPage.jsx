@@ -1,3 +1,4 @@
+/* AUTH: /super-admin/registro — primera cuenta libre; siguientes requieren super admin logueado */
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button.jsx';

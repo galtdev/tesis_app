@@ -1,3 +1,4 @@
+/* AUTH: POST pedido público; dashboard/caja/cocina/confirmar requieren token y rol */
 import express from 'express';
 import security from '../middlewares/securityActions.js';
 import * as controllerPedido from '../controllers/pedidoController.js';

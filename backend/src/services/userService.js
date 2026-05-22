@@ -1,3 +1,4 @@
+/* AUTH: Staff del restaurante — roles Prisma, restaurantId obligatorio, caja/cocina */
 import prisma from '../config/prisma.js';
 import bcrypt from 'bcrypt';
 import { normalizeRol } from '../utils/roles.js';

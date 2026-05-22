@@ -1,3 +1,4 @@
+/* AUTH: Montado en /api/auth y /api/user — login, me, register-super-admin, CRUD usuarios */
 import express from 'express';
 import security from '../middlewares/securityActions.js';
 import * as controller from '../controllers/userController.js';

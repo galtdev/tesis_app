@@ -1,3 +1,4 @@
+/* AUTH: /admin/login y /super-admin/login — tipo restaurant | super-admin */
 import { useEffect, useState } from 'react';
 import { api } from '../../services/api.js';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';

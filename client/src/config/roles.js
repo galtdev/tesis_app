@@ -1,3 +1,4 @@
+/* AUTH: Roles frontend, menú sidebar admin y rutas por defecto tras login */
 export const ROLES = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   DUENO_RESTAURANT: 'DUENO_RESTAURANT',

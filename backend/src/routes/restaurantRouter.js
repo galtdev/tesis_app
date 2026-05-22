@@ -1,3 +1,4 @@
+/* AUTH: Solo SUPER_ADMIN — ver CHANGELOG-AUTH.md */
 import express from 'express';
 import security from '../middlewares/securityActions.js';
 import * as controller from '../controllers/restaurantController.js';

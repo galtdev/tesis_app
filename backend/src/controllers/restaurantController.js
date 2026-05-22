@@ -1,3 +1,4 @@
+/* AUTH: Alta exige correo/password dueño — respuesta con duenoCorreo y loginPath */
 import * as service from '../services/restaurantService.js';
 import * as resp from '../red/response.js';
 

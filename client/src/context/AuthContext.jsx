@@ -1,3 +1,4 @@
+/* AUTH: Sesión global — token en localStorage, login/logout, registerSuperAdmin, GET /api/auth/me */
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { api, setAuthToken } from '../services/api.js';
 import { getDefaultAdminPath, normalizeRol, ROLES } from '../config/roles.js';

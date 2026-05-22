@@ -1,3 +1,4 @@
+/* AUTH: AuthProvider envuelve la app — ver context/AuthContext.jsx */
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';

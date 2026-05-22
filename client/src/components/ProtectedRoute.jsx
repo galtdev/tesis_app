@@ -1,3 +1,4 @@
+/* AUTH: Redirige a login si no hay sesión; valida allowedRoles. Ver CHANGELOG-AUTH.md */
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { canAccessRoute, getDefaultAdminPath, normalizeRol, ROLES } from '../config/roles.js';

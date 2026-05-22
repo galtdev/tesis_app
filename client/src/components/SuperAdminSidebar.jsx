@@ -1,3 +1,4 @@
+/* AUTH: Panel plataforma — registro super admin, logout → /super-admin/login */
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import '../styles/styles.css';

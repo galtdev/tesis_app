@@ -1,3 +1,4 @@
+/* AUTH: Mapeo admin/caja/cocina → enum Prisma (DUENO_RESTAURANT, STAFF_*) */
 const ROL_TO_PRISMA = {
   admin: 'DUENO_RESTAURANT',
   caja: 'STAFF_CAJA',

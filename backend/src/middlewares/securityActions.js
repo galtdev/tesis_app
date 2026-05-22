@@ -1,3 +1,4 @@
+/* AUTH: isLogged() y checkRoles() — Bearer JWT en Authorization */
 import auth from '../auth/index.js';
 import { error } from '../red/response.js';
 import { normalizeRol } from '../utils/roles.js';

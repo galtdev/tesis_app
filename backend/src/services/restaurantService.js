@@ -1,3 +1,4 @@
+/* AUTH: Alta restaurante crea dueño (usuario + auth DUENO_RESTAURANT) con correo/password */
 import prisma from '../config/prisma.js';
 import bcrypt from 'bcrypt';
 
