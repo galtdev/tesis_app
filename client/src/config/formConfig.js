@@ -1,8 +1,14 @@
-// 1. GESTIÓN DE USUARIOS
-export const LoginUsuario = [
-  { name: 'nombre_usuario', label: 'Nombre de usuario', placeholder: 'Ej: angel osuna', required: true },
+// Login (restaurante y super admin)
+export const camposLogin = [
+  { name: 'correo', label: 'Correo electrónico', type: 'email', placeholder: 'correo@ejemplo.com', required: true },
   { name: 'password', label: 'Contraseña', type: 'password', placeholder: '••••••••', required: true },
-  ];
+];
+
+export const camposRegistroSuperAdmin = [
+  { name: 'correo', label: 'Correo electrónico', type: 'email', placeholder: 'admin@plataforma.com', required: true },
+  { name: 'password', label: 'Contraseña', type: 'password', placeholder: 'Mínimo 6 caracteres', required: true },
+  { name: 'password_confirm', label: 'Confirmar contraseña', type: 'password', placeholder: 'Repite la contraseña', required: true },
+];
 
 
 export const camposUsuario = [
@@ -50,6 +56,37 @@ export const camposConfirmarPago = [
     type: 'number', 
     placeholder: '0.00', 
     required: true 
+  }
+];
+
+export const camposRestaurant = [
+  { name: 'nombre', label: 'Nombre del restaurante', placeholder: 'Ej: Pizzería Pepe', required: true },
+  { name: 'nombre_dueno', label: 'Nombre del dueño / administrador', placeholder: 'Ej: Juan Pérez', required: true },
+  { name: 'correo', label: 'Correo de acceso al panel', type: 'email', placeholder: 'dueno@pizzeria.com', required: true },
+  { name: 'password', label: 'Contraseña inicial', type: 'password', placeholder: 'Mínimo 6 caracteres', required: true },
+  { name: 'ubicacion', label: 'Ubicación', placeholder: 'Ej: Av. Principal #12', required: true },
+  {
+    name: 'slug',
+    label: 'Slug (URL)',
+    placeholder: 'Ej: pizzeria-pepe',
+    required: false
+  },
+  {
+    name: 'status',
+    label: 'Estado',
+    type: 'select',
+    required: true,
+    options: [
+      { value: 'activo', label: 'Activo' },
+      { value: 'inactivo', label: 'Inactivo' }
+    ]
+  },
+  { name: 'horario', label: 'Horario', placeholder: 'Ej: Lun-Vie 8:00 - 22:00', required: false },
+  {
+    name: 'banner',
+    label: 'URL del banner',
+    placeholder: 'https://...',
+    required: false
   }
 ];
 

@@ -1,5 +1,6 @@
 import auth from '../auth/index.js';
-import { error, success } from '../red/response.js';
+import { error } from '../red/response.js';
+import { normalizeRol } from '../utils/roles.js';
 
 const isLogged = () => {
     return (req, res, next) => {
@@ -7,27 +8,37 @@ const isLogged = () => {
             auth.checkToken.confirmToken(req);
             next();
         } catch (err) {
-            error(req, res, 'Debes iniciar sesion para realizar esta accion', 401);
+            error(req, res, 'Debes iniciar sesión para realizar esta acción', 401);
         }
-    }
-}
+    };
+};
 
 const checkRol = (rolRequired) => {
+    return checkRoles(rolRequired);
+};
+
+const checkRoles = (...rolesRequired) => {
+    const allowed = rolesRequired.flat().map(normalizeRol);
+
     return (req, res, next) => {
         try {
             const user = auth.checkToken.confirmToken(req);
-            if (user.rol !== rolRequired) {
-                return success(req, res, `Tu usuario tipo ${user.rol} no tiene permisos`, 403);
+            const userRol = normalizeRol(user.rol);
+
+            if (!allowed.includes(userRol)) {
+                return error(req, res, `Tu rol (${userRol}) no tiene permisos para esta acción`, 403);
             }
+
             next();
         } catch (err) {
             error(req, res, 'No tienes permisos', 401);
         }
-    }
-}
+    };
+};
 
 export default {
     isLogged,
-    checkRol
+    checkRol,
+    checkRoles,
 };
 

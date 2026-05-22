@@ -7,6 +7,16 @@ export const usuariosColumns = [
   { label: 'Prueba', key: 'prueba' }
 ];
 
+export const restaurantColumns = [
+  { label: 'Nombre', key: 'nombre' },
+  { label: 'Correo dueño', key: 'usuarios.0.auth.correo' },
+  { label: 'Ubicación', key: 'ubicacion' },
+  { label: 'Slug', key: 'slug' },
+  { label: 'Estado', key: 'status' },
+  { label: 'Horario', key: 'horario' },
+  { label: 'Plataforma', key: 'platform.nombre' }
+];
+
 export const menuColums = [
   { label: 'Plato', key: 'nombre_platillo' },
   { label: 'Contenido', key: 'contenido' },

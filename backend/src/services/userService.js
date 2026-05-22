@@ -1,11 +1,13 @@
 import prisma from '../config/prisma.js';
 import bcrypt from 'bcrypt';
+import { normalizeRol } from '../utils/roles.js';
 
-export async function all() {
+export async function all(restaurantId = null) {
     return await prisma.usuario.findMany({
+        where: restaurantId ? { restaurantId: Number(restaurantId) } : undefined,
         include: {
-            auth: true
-        }
+            auth: true,
+        },
     });
 }
 
@@ -30,35 +32,44 @@ export async function save(data, authData) {
 
 
     return await prisma.$transaction(async (tx) => {
-
         let passwordHasheada = null;
         if (authData && authData.password) {
             passwordHasheada = await bcrypt.hash(authData.password.toString(), 10);
         }
 
+        const prismaRol = authData?.rol ? normalizeRol(authData.rol) : undefined;
+        const restaurantId = Number(rest.restaurantId);
+
+        if (!restaurantId) {
+            throw new Error('restaurantId es obligatorio para crear usuarios');
+        }
+
         const newUser = await tx.usuario.create({
             data: {
                 ...rest,
-                auth: authData ? {
-                    create: {
-                        correo: authData.correo,
-                        password: passwordHasheada,
-                        rol: authData.rol
-                    }
-                } : undefined
-            }
+                restaurantId,
+                auth: authData
+                    ? {
+                          create: {
+                              correo: authData.correo,
+                              password: passwordHasheada,
+                              rol: prismaRol,
+                          },
+                      }
+                    : undefined,
+            },
         });
 
-        if (authData?.rol === 'cocina'){
+        if (prismaRol === 'STAFF_COCINA') {
             await tx.cocina.create({
-                data: {usuarioId : newUser.id}
+                data: { usuarioId: newUser.id, restaurantId },
             });
-
-        } else if (authData?.rol === 'caja'){
+        } else if (prismaRol === 'STAFF_CAJA') {
             await tx.caja.create({
-                data: {usuarioId: newUser.id}
+                data: { usuarioId: newUser.id, restaurantId },
             });
         }
+
         return newUser;
     });
 }

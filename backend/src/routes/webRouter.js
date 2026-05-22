@@ -7,14 +7,51 @@ import * as controllerPlatillo from '../controllers/menuController.js';
 
 const router = express.Router();
 
-router.get('/dashboard-metrics', controllerPedido.obtenerMetricasDashboard);
-router.get('/estadisticas-ventas', controllerPedido.obtenerEstadisticasVentas);
+const staffRestaurant = security.checkRoles(
+    'DUENO_RESTAURANT',
+    'STAFF_CAJA',
+    'STAFF_COCINA'
+);
+
 router.post('/', controllerPedido.registrarPedido);
-router.get('/caja/:idCaja', controllerPedido.obtenerPedidosCaja);
-router.get('/cocina/:idCocina', controllerPedido.obtenerPendientesCocina);
+
+router.get(
+    '/dashboard-metrics',
+    security.isLogged(),
+    security.checkRoles('DUENO_RESTAURANT', 'STAFF_CAJA'),
+    controllerPedido.obtenerMetricasDashboard
+);
+router.get(
+    '/estadisticas-ventas',
+    security.isLogged(),
+    security.checkRoles('DUENO_RESTAURANT'),
+    controllerPedido.obtenerEstadisticasVentas
+);
+router.get(
+    '/caja/:idCaja',
+    security.isLogged(),
+    security.checkRoles('DUENO_RESTAURANT', 'STAFF_CAJA'),
+    controllerPedido.obtenerPedidosCaja
+);
+router.get(
+    '/cocina/:idCocina',
+    security.isLogged(),
+    security.checkRoles('DUENO_RESTAURANT', 'STAFF_COCINA'),
+    controllerPedido.obtenerPendientesCocina
+);
 router.get('/:id', controllerPlatillo.one);
-router.put('/confirmar/:idPedido', controllerPedido.confirmarPago);
-router.put('/confirmar-entrega/:idPedido', controllerPedido.terminarComanda);
+router.put(
+    '/confirmar/:idPedido',
+    security.isLogged(),
+    security.checkRoles('DUENO_RESTAURANT', 'STAFF_CAJA'),
+    controllerPedido.confirmarPago
+);
+router.put(
+    '/confirmar-entrega/:idPedido',
+    security.isLogged(),
+    staffRestaurant,
+    controllerPedido.terminarComanda
+);
 
 
 

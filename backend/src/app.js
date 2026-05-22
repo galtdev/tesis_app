@@ -10,6 +10,7 @@ import error from './red/errors.js';
 import users from './routes/userRutas.js';
 import menu from './routes/adminRouter.js';
 import web from './routes/webRouter.js';
+import restaurants from './routes/restaurantRouter.js';
 
 // --- Configuración de __dirname para ES Modules ---
 const __filename = fileURLToPath(import.meta.url);
@@ -24,14 +25,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Configuración y archivos estáticos
+
 app.set('port', config.app.port);
 app.use(express.static(path.join(__dirname, '..', '..', 'client', 'public')));
 app.use('/imagenes', express.static(path.join(__dirname, 'storage', 'img')));
 
 // Rutas API
+
 app.use('/api/user', users);
 app.use('/api/auth', users);
 app.use('/api/menu', menu);
+app.use('/api/restaurant', restaurants);
 app.use('/api/pedido', web);
 
 

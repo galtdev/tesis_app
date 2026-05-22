@@ -4,7 +4,8 @@ import * as auth from '../auth/controllerAuth.js';
 
 async function all(req, res, next) {
     try {
-        const items = await db.all();
+        const restaurantId = req.user?.restaurantId ?? null;
+        const items = await db.all(restaurantId);
         resp.success(req, res, items, 200);
     } catch (err) {
         next(err);
@@ -26,22 +27,16 @@ async function one(req, res, next) {
 
 async function create(req, res, next) {
     try {
-    
         const { correo, password, rol, ...datosUsuario } = req.body;
-        const authData = (correo || password) ? {correo, password, rol}: null;
+        const authData = correo || password ? { correo, password, rol } : null;
 
-        const userSave = await db.save(datosUsuario, authData);   
-        
-        if (correo || password) {
-            await auth.create({
-                id: userSave.id,
-                correo: correo,
-                password: password,
-                rol: rol 
-            });
+        if (req.user?.restaurantId) {
+            datosUsuario.restaurantId = req.user.restaurantId;
         }
 
-        resp.success(req, res, { msj: 'Registro exitoso', data: userSave }, 201);                
+        const userSave = await db.save(datosUsuario, authData);
+
+        resp.success(req, res, { msj: 'Registro exitoso', data: userSave }, 201);
     } catch (err) {
         next(err);
     }

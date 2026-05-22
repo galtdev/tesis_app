@@ -1,5 +1,5 @@
-
 import prisma from '../config/prisma.js';
+import { resolveRestaurantId } from './restaurantService.js';
 
 
 export async function all(){
@@ -17,7 +17,8 @@ export async function one(id){
 }
 
 export async function upsertPlatillo(data) {
-    
+    const restaurantId = await resolveRestaurantId(data.restaurantId);
+
     const platillo = {
         nombre_platillo: data.nombre_platillo,
         precio: Number(data.precio),
@@ -25,16 +26,18 @@ export async function upsertPlatillo(data) {
         status: data.status ?? "activo",
         category: data.category === "" ? "General" : data.category,
         imagen: data.imagen
-    }
+    };
 
     const idSearch = data.id ? Number(data.id) : 0;
 
     return await prisma.platillo.upsert({
         where: { id: idSearch },
         update: platillo,
-        create: platillo
+        create: {
+            ...platillo,
+            restaurantId
+        }
     });
-
 }
 
 
